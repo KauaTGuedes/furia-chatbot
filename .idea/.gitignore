@@ -1,0 +1,17 @@
+# IntelliJ / WebStorm / IDE settings
+/shelf/
+/workspace.xml
+
+# HTTP Client (IDE)
+httpRequests/
+
+# DataSources (IDE)
+dataSources/
+dataSources.local.xml
+
+# Ambiente
+.env
+
+# Node.js
+node_modules/
+dist/

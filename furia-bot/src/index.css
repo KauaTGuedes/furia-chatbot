@@ -1,0 +1,255 @@
+/* ==================== VARIÁVEIS ==================== */
+:root {
+  --bg-dark: #000000;
+  --bg-darker: #1b1b1b;
+  --bg-input: #363636;
+  --bg-gray: #515151;
+  --bg-light-gray: #6c6c6c;
+  --text-primary: white;
+  --text-secondary: #aaa;
+  --accent-color: #9d8418;
+  --border-color: #333;
+}
+
+/* ==================== GERAIS ==================== */
+body {
+  margin: 0;
+  font-family: "Roboto", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--bg-dark);
+  color: var(--text-primary);
+  letter-spacing: 0.5px;
+}
+
+.App {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ==================== HEADER / FOOTER ==================== */
+.header,
+.footer {
+  background: var(--bg-darker);
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-img {
+  height: 40px;
+}
+
+.furia-text {
+  font-weight: bold;
+  font-size: 1.4rem;
+  background: linear-gradient(to bottom, #ccc, #333);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.social-icons {
+  list-style: none;
+  display: flex;
+  gap: 15px;
+  padding: 0;
+  margin: 0;
+}
+
+.social-icons img {
+  height: 24px;
+}
+
+/* ==================== ÁREA DE CONVERSA ==================== */
+.chat-section {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  padding: 2rem 1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.background-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  opacity: 0.15;
+}
+
+.chat-container {
+  position: relative;
+  z-index: 1;
+  max-width: 800px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  flex: 1;
+}
+
+/* ==================== MENSAGENS ==================== */
+.chat-messages {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  overflow-y: auto;
+  flex: 1;
+  padding: 1rem 0;
+}
+
+.chat-messages::-webkit-scrollbar {
+  width: 8px;
+  background-color: transparent;
+}
+
+.chat-message {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.chat-message.user {
+  flex-direction: row-reverse;
+  text-align: right;
+}
+
+.message-content {
+  max-width: 70%;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: #222;
+  color: white;
+  word-break: break-word;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  animation: fadeIn 0.3s ease-out;
+  font-size: 1rem;
+}
+
+.user .message-content {
+  background-color: #333;
+}
+
+.message-content strong {
+  font-weight: bold;
+  color: var(--accent-color);
+}
+
+.timestamp {
+  display: block;
+  font-size: 0.75rem;
+  margin-top: 4px;
+  opacity: 0.6;
+  color: var(--text-secondary);
+}
+
+/* ==================== AVATAR ==================== */
+.avatar {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  background-color: white;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 10px;
+}
+
+.avatar img {
+  width: 28px;
+  height: 28px;
+  object-fit: cover;
+}
+
+.user-avatar {
+  font-size: 20px;
+}
+
+/* ==================== INPUT ==================== */
+.chat-input-area {
+  display: flex;
+  background-color: var(--bg-input);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 0.5rem 1rem;
+  margin-top: auto;
+  position: sticky;
+  bottom: 0;
+}
+
+.chat-input-area input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  font-family: "Roboto", sans-serif;
+  font-size: 1rem;
+  padding: 0.3rem;
+}
+
+.chat-input-area input:disabled {
+  opacity: 0.7;
+}
+
+.chat-input-area button {
+  background: var(--accent-color);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  margin-left: 0.5rem;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.2s;
+  min-width: 50px;
+  font-family: "Roboto", sans-serif;
+}
+
+.chat-input-area button:hover:not(:disabled) {
+  background: var(--bg-darker);
+}
+
+.chat-input-area button:disabled {
+  background: #666;
+  cursor: not-allowed;
+}
+
+/* ==================== ANIMAÇÃO ==================== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==================== RESPONSIVO ==================== */
+@media (max-width: 600px) {
+  .header,
+  .footer {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .chat-message {
+    max-width: 100%;
+  }
+}
