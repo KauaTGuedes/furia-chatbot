@@ -67,7 +67,7 @@ A IA que responde no chat é baseada na **DeepSeek API**, acessada via [OpenRout
 ## 🤳 prints
 ## 🤳 Prints
 
-| ![Print 1](img_1.png) | ![Print 2](img.png) |
+| ![Print 1](furia-bot/img_1.png) | ![Print 2](furia-bot/img.png) |
 |:---------------------:|:------------------:|
 
 
