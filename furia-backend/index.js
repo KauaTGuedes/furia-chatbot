@@ -3,7 +3,19 @@ const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
 
+
 const app = express();
+app.get('/healthz', (req, res) => res.send('ok'));
+
+// Suas outras rotas
+app.get('/mensagem', (req, res) => {
+    res.send('mensagem do bot');
+});
+
+app.listen(PORT, () => {
+    console.log(`Servidor rodando na porta ${PORT}`);
+});
+
 app.use(cors());
 app.use(express.json());
 
