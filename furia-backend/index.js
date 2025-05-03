@@ -3,22 +3,29 @@ import express from 'express';
 import axios from 'axios';
 import cors from 'cors';
 
+// Configurações iniciais
 dotenv.config();
-
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-app.use(cors());
+// Middlewares
+app.use(cors({
+    origin: ['https://seu-frontend.vercel.app', 'http://localhost:5173'],
+    methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type']
+}));
 app.use(express.json());
 
-// Rotas básicas
-app.get('/healthz', (req, res) => res.send('ok'));
+// Rotas
+app.get('/healthz', (req, res) => {
+    res.status(200).send('ok');
+});
 
 app.get('/mensagem', (req, res) => {
     res.send('mensagem do bot');
 });
 
-// Prompt completo do chatbot FURIA (mantido exatamente como solicitado)
+// Sistema do Chatbot FURIA (mantido conforme sua versão)
 const systemPrompt = `Você é um chatbot da FURIA Esports com foco principal em **CS:GO**, mas também responde perguntas sobre outros times da FURIA como **League of Legends (LoL)** e **Valorant**.
 
 ### Informações reais e atualizadas (2024/2025):
@@ -35,15 +42,8 @@ const systemPrompt = `Você é um chatbot da FURIA Esports com foco principal em
 
 **Valorant:**
 - FURIA também tem time competitivo de Valorant.
-- Para datas de jogos e escalação, consulte [https://vlr.gg](https://vlr.gg) ou o Twitter oficial da FURIA.
+- Para datas de jogos e escalação, consulte [https://vlr.gg](https://vlr.gg) ou o Twitter oficial da FURIA.`;
 
-### Regras da resposta:
-- Fale com tom empolgado, mas informativo.
-- Priorize CS:GO, mas responda com clareza sobre LoL e Valorant.
-- Se não souber uma data ou escalação exata, recomende um site confiável de e-sports.
-- Evite marcações como ## ou --. Use **negrito** apenas nos trechos importantes.`;
-
-// Rota principal do chatbot
 app.post('/chat', async (req, res) => {
     try {
         const { message } = req.body;
@@ -70,7 +70,8 @@ app.post('/chat', async (req, res) => {
     }
 });
 
-// Inicia o servidor
+// Inicialização do servidor
 app.listen(PORT, () => {
-    console.log(`Servidor rodando na porta ${PORT}`);
+    console.log(`✅ Backend FURIA rodando na porta ${PORT}`);
+    console.log(`➡️ Teste a rota de saúde em: http://localhost:${PORT}/healthz`);
 });
