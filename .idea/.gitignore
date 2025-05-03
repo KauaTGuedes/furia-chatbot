@@ -9,7 +9,7 @@ httpRequests/
 dataSources/
 dataSources.local.xml
 
-# Ambiente
+# .gitignore (raiz do projeto)
 .env
 
 # Node.js
