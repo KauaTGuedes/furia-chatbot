@@ -25,7 +25,7 @@ app.get('/mensagem', (req, res) => {
     res.send('mensagem do bot');
 });
 
-// Sistema do Chatbot FURIA (mantido conforme sua versão)
+
 const systemPrompt = `Você é um chatbot da FURIA Esports com foco principal em **CS:GO**, mas também responde perguntas sobre outros times da FURIA como **League of Legends (LoL)** e **Valorant**.
 
 ### Informações reais e atualizadas (2024/2025):
