@@ -1,31 +1,25 @@
-require('dotenv').config();
-const express = require('express');
-const axios = require('axios');
-const cors = require('cors');
+import dotenv from 'dotenv';
+import express from 'express';
+import axios from 'axios';
+import cors from 'cors';
 
+dotenv.config();
 
 const app = express();
-app.get('/healthz', (req, res) => res.send('ok'));
-
-// Suas outras rotas
-app.get('/mensagem', (req, res) => {
-    res.send('mensagem do bot');
-});
-
-app.listen(PORT, () => {
-    console.log(`Servidor rodando na porta ${PORT}`);
-});
+const PORT = process.env.PORT || 3001;
 
 app.use(cors());
 app.use(express.json());
 
-const API_KEY = process.env.VITE_OPENROUTER_API_KEY;
+// Rotas básicas
+app.get('/healthz', (req, res) => res.send('ok'));
 
-app.post('/chat', async (req, res) => {
-    const { message } = req.body;
+app.get('/mensagem', (req, res) => {
+    res.send('mensagem do bot');
+});
 
-    const systemPrompt = `
-Você é um chatbot da FURIA Esports com foco principal em **CS:GO**, mas também responde perguntas sobre outros times da FURIA como **League of Legends (LoL)** e **Valorant**.
+// Prompt completo do chatbot FURIA (mantido exatamente como solicitado)
+const systemPrompt = `Você é um chatbot da FURIA Esports com foco principal em **CS:GO**, mas também responde perguntas sobre outros times da FURIA como **League of Legends (LoL)** e **Valorant**.
 
 ### Informações reais e atualizadas (2024/2025):
 
@@ -47,11 +41,14 @@ Você é um chatbot da FURIA Esports com foco principal em **CS:GO**, mas també
 - Fale com tom empolgado, mas informativo.
 - Priorize CS:GO, mas responda com clareza sobre LoL e Valorant.
 - Se não souber uma data ou escalação exata, recomende um site confiável de e-sports.
-- Evite marcações como ## ou --. Use **negrito** apenas nos trechos importantes.
-    `;
+- Evite marcações como ## ou --. Use **negrito** apenas nos trechos importantes.`;
 
+// Rota principal do chatbot
+app.post('/chat', async (req, res) => {
     try {
-        const payload = {
+        const { message } = req.body;
+
+        const response = await axios.post('https://openrouter.ai/api/v1/chat/completions', {
             model: "deepseek/deepseek-chat:free",
             messages: [
                 { role: "system", content: systemPrompt },
@@ -59,11 +56,9 @@ Você é um chatbot da FURIA Esports com foco principal em **CS:GO**, mas també
             ],
             temperature: 0.7,
             max_tokens: 1024
-        };
-
-        const response = await axios.post('https://openrouter.ai/api/v1/chat/completions', payload, {
+        }, {
             headers: {
-                'Authorization': `Bearer ${API_KEY}`,
+                'Authorization': `Bearer ${process.env.VITE_OPENROUTER_API_KEY}`,
                 'Content-Type': 'application/json'
             }
         });
@@ -75,5 +70,7 @@ Você é um chatbot da FURIA Esports com foco principal em **CS:GO**, mas també
     }
 });
 
-const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));
+// Inicia o servidor
+app.listen(PORT, () => {
+    console.log(`Servidor rodando na porta ${PORT}`);
+});
