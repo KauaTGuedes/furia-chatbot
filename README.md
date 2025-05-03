@@ -12,16 +12,23 @@ O bot tem como **foco principal o time de CS:GO da FURIA**, oferecendo:
 - **Vite** ⚡: Ferramenta de build ultra-rápida para projetos.
 - **JavaScript** 🧑‍💻: Linguagem principal para lógica e interação dos componentes.
 - **CSS** 🎨: Estilização modular com responsividade e personalização.
+- **Node.js** 🟢: Ambiente de execução para o backend.
+- **Express** 🚀: Framework para o servidor Node
 - **OpenRouter + DeepSeek API** 🤖
 
 ## 📁 Estrutura do Projeto
 
-- **furia-backend/index.js**: Arquivo principal do servidor Express.
-- **furia-bot/src/components/ChatBox.jsx**: Componente principal do chat.
-- **furia-bot/src/App.jsx**: Componente raiz da aplicação React.
-- **furia-bot/src/index.css**: Estilos base da interface.
-- **furia-bot/public/index.html**: HTML principal do front-end.
-- **vite.config.js**: Configuração do projeto com Vite.
+- **furia-backend/**
+    - `index.js`: Arquivo principal do servidor Express
+    - `package.json`: Dependências do backend
+
+- **furia-bot/**
+    - `src/`
+        - `components/ChatBox.jsx`: Componente principal do chat
+        - `App.jsx`: Componente raiz da aplicação
+        - `index.css`: Estilos base
+    - `public/index.html`: HTML principal
+    - `vite.config.js`: Configuração do Vite
 
 
 ---
