@@ -23,27 +23,33 @@ export default function ChatBox({ messages, setMessages, isLoading, setIsLoading
         setIsLoading(true);
 
         try {
-            const response = await fetch("http://localhost:3001/chat", {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/chat`, {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json",
+                    "Content-Type": "application/json"
                 },
                 body: JSON.stringify({ message: userInput }),
             });
 
             const data = await response.json();
 
-            if (data.choices && data.choices[0]?.message?.content) {
-                const botReply = data.choices[0].message.content;
-                setMessages(prev => [...prev, { role: 'bot', content: botReply }]);
+            if (!response.ok) {
+                throw new Error(data.error?.details || 'Erro no servidor');
+            }
+
+            if (data.choices?.[0]?.message?.content) {
+                setMessages(prev => [...prev, {
+                    role: 'bot',
+                    content: data.choices[0].message.content
+                }]);
             } else {
-                throw new Error("Resposta inesperada da API.");
+                throw new Error("Resposta da API incompleta");
             }
         } catch (error) {
-            console.error("Erro ao buscar resposta do back-end:", error);
+            console.error("Erro:", error);
             setMessages(prev => [...prev, {
                 role: 'bot',
-                content: 'Deu ruim no servidor! Tenta de novo ou me pergunta outra coisa.'
+                content: `⚠️ Erro: ${error.message}`
             }]);
         } finally {
             setIsLoading(false);
@@ -53,7 +59,6 @@ export default function ChatBox({ messages, setMessages, isLoading, setIsLoading
     const formatTime = () => {
         return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     };
-
 
     const formatMessage = (text) => {
         return text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
@@ -102,8 +107,11 @@ export default function ChatBox({ messages, setMessages, isLoading, setIsLoading
                         placeholder="Digite sua mensagem..."
                         disabled={isLoading}
                     />
-                    <button onClick={handleSendMessage} disabled={isLoading || !userInput.trim()}>
-                        Enviar
+                    <button
+                        onClick={handleSendMessage}
+                        disabled={isLoading || !userInput.trim()}
+                    >
+                        {isLoading ? '...' : 'Enviar'}
                     </button>
                 </div>
             </div>

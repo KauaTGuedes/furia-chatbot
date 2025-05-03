@@ -3,75 +3,72 @@ import express from 'express';
 import axios from 'axios';
 import cors from 'cors';
 
-// Configurações iniciais
+// Configurações
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3001;
 
 // Middlewares
 app.use(cors({
-    origin: ['https://seu-frontend.vercel.app', 'http://localhost:5173'],
+    origin: '*',
     methods: ['GET', 'POST', 'OPTIONS'],
-    allowedHeaders: ['Content-Type']
+    allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json());
 
-// Rotas
-app.get('/healthz', (req, res) => {
-    res.status(200).send('ok');
-});
-
-app.get('/mensagem', (req, res) => {
-    res.send('mensagem do bot');
-});
-
-
-const systemPrompt = `Você é um chatbot da FURIA Esports com foco principal em **CS:GO**, mas também responde perguntas sobre outros times da FURIA como **League of Legends (LoL)** e **Valorant**.
-
-### Informações reais e atualizadas (2024/2025):
-
-**CS:GO:**
-- Jogadores principais: Andrei "arT", Kaike "KSCERATO", Yuri "yuurih", André "drop", Gabriel "FalleN".
-- Técnico: Nicholas "guerri".
-- Analista: Lucas "chucky".
-- Premiações: já disputou Majors, venceu títulos regionais, destaque em ESL, BLAST e IEM.
-
-**League of Legends (LoL):**
-- Time ativo no CBLOL.
-- Jogadores e calendário podem variar, consulte o site oficial [https://cbLOL.gg](https://cbLOL.gg) para informações atualizadas.
-
-**Valorant:**
-- FURIA também tem time competitivo de Valorant.
-- Para datas de jogos e escalação, consulte [https://vlr.gg](https://vlr.gg) ou o Twitter oficial da FURIA.`;
-
+// Rota do chat
 app.post('/chat', async (req, res) => {
     try {
         const { message } = req.body;
 
+        if (!message?.trim()) {
+            return res.status(400).json({ error: 'Mensagem inválida' });
+        }
+
         const response = await axios.post('https://openrouter.ai/api/v1/chat/completions', {
-            model: "deepseek/deepseek-chat:free",
-            messages: [
-                { role: "system", content: systemPrompt },
-                { role: "user", content: message }
-            ],
+            model: 'deepseek/deepseek-chat:free',
+            messages: [{
+                role: 'system',
+                content: `Você é o chatbot oficial da FURIA Esports. Responda sobre:
+                - CS:GO (arT, KSCERATO, yuurih, drop, FalleN)
+                - Valorant
+                - League of Legends (CBLOL)`
+            }, {
+                role: 'user',
+                content: message
+            }],
             temperature: 0.7,
             max_tokens: 1024
         }, {
             headers: {
-                'Authorization': `Bearer ${process.env.VITE_OPENROUTER_API_KEY}`,
-                'Content-Type': 'application/json'
-            }
+                'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
+                'Content-Type': 'application/json',
+                'HTTP-Referer': 'http://localhost:5173',
+                'X-Title': 'FURIA Chat'
+            },
+            timeout: 8000
         });
 
-        res.json(response.data);
+        res.json({
+            choices: [{
+                message: {
+                    content: response.data.choices[0].message.content
+                }
+            }]
+        });
+
     } catch (error) {
-        console.error('Erro na API:', error.response?.data || error.message);
-        res.status(500).json({ error: 'Erro ao acessar a API de IA' });
+        console.error('Erro na API:', {
+            status: error.response?.status,
+            data: error.response?.data
+        });
+
+        res.status(500).json({
+            error: 'Erro ao acessar a API',
+            details: error.response?.data?.error?.message || error.message
+        });
     }
 });
 
-// Inicialização do servidor
-app.listen(PORT, () => {
-    console.log(`✅ Backend FURIA rodando na porta ${PORT}`);
-    console.log(`➡️ Teste a rota de saúde em: http://localhost:${PORT}/healthz`);
-});
+// Inicia servidor
+app.listen(PORT, () => console.log(`🚀 Servidor rodando na porta ${PORT}`));
