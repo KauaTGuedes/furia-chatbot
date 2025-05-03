@@ -28,6 +28,7 @@ O bot tem como **foco principal o time de CS:GO da FURIA**, oferecendo:
         - `App.jsx`: Componente raiz da aplicação
         - `index.css`: Estilos base
     - `public/index.html`: HTML principal
+    - `package.json`: Dependências do frontend
     - `vite.config.js`: Configuração do Vite
 
 
